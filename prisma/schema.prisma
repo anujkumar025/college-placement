@@ -7,59 +7,66 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Users {
+  id         Int     @id @default(autoincrement())
+  username   String
+  password   String
+  college_id Int
+  college    College @relation(fields: [college_id], references: [id])
+}
+
 model College {
-  id        Int      @id @default(autoincrement())
-  name      String
-  score     Int
-  city_id   Int
-  state_id  Int
-  city      Cities   @relation(fields: [city_id], references: [id])
-  state     States   @relation(fields: [state_id], references: [id])
+  id       Int    @id @default(autoincrement())
+  name     String
+  score    Int
+  city_id  Int
+  state_id Int
+  city     Cities @relation(fields: [city_id], references: [id])
+  state    States @relation(fields: [state_id], references: [id])
 
   // Relation fields
   placements College_Placement[]
   courses    College_Wise_Course[]
+  Users      Users[]
 
   @@index([score]) // Optional: Index for sorting by score
 }
 
 model College_Placement {
-  id               Int      @id @default(autoincrement())
-  college_id       Int
-  year             Int
+  id                Int     @id @default(autoincrement())
+  college_id        Int
+  year              Int
   highest_placement Int
   average_placement Int
-  median_placement Int
-  placement_rate   Int
-  college          College  @relation(fields: [college_id], references: [id])
+  median_placement  Int
+  placement_rate    Int
+  college           College @relation(fields: [college_id], references: [id])
 }
 
 model College_Wise_Course {
-  id            Int      @id @default(autoincrement())
-  college_id    Int
-  course_name   String
+  id              Int     @id @default(autoincrement())
+  college_id      Int
+  course_name     String
   course_duration Int
-  course_fee    Int
-  college       College  @relation(fields: [college_id], references: [id])
+  course_fee      Int
+  college         College @relation(fields: [college_id], references: [id])
 }
 
 model Cities {
-  id        Int      @id @default(autoincrement())
-  name      String
-  state_id  Int
-  state     States   @relation(fields: [state_id], references: [id])
+  id       Int    @id @default(autoincrement())
+  name     String
+  state_id Int
+  state    States @relation(fields: [state_id], references: [id])
 
   // Relation field
-  colleges  College[]
+  colleges College[]
 }
 
 model States {
-  id        Int      @id @default(autoincrement())
-  name      String
+  id   Int    @id @default(autoincrement())
+  name String
 
   // Relation fields
-  cities    Cities[]
-  colleges  College[]
+  cities   Cities[]
+  colleges College[]
 }
-
-
